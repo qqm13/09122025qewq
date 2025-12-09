@@ -1,32 +1,24 @@
-using _09122025.Classes;
-using Microsoft.AspNetCore.Mvc;
-
-namespace _09122025.Controllers
+п»їnamespace _09122025.Classes
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class AuthController : ControllerBase
+    public class AuthControllerClass(DBBD db)
     {
-        private DBBD db;
-
-        [HttpPost("Auth/Verify")]
+        private DBBD db = db;
         public string Login(string login, string password)
         {
             List<User> users = db.GetUsers();
 
             foreach (var user in users)
             {
-                if(user.Password == password&&user.Login == login)
+                if (user.Password == password && user.Login == login)
                 {
                     return user.Info;
                 }
             }
 
-            return "Неверный логин или пароль";
+            return "РќРµРІРµСЂРЅС‹Р№ Р»РѕРіРёРЅ РёР»Рё РїР°СЂРѕР»СЊ";
         }
-
-        [HttpGet("Auth/Schedule")]
-        public string Schedule(string user_id, DateTime date)
+    
+     public string Schedule(string user_id, DateTime date)
         {
             List<User> users = db.GetUsers();
 
@@ -36,24 +28,24 @@ namespace _09122025.Controllers
             {
                 if (user_id == user.Id)
                 {
-                   foreach(Schedule schedule in user.Schedule)
+                    foreach (Schedule schedule in user.Schedule)
                     {
-                        if(schedule.Date == date)
+                        if (schedule.Date == date)
                         {
-                            foreach(Lesson lesson in schedule.Lessons)
+                            foreach (Lesson lesson in schedule.Lessons)
                             {
                                 answer += lesson.Number;
                                 answer += ". ";
                                 answer += lesson.Title;
                                 answer += "\n";
                             }
-                            return answer;
+                            
                         }
                     }
                 }
             }
 
-            return "Неверный логин или пароль";
+            return answer;
         }
     }
 }
