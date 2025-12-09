@@ -11,7 +11,7 @@ namespace _09122025.Controllers
         private DBBD db;
 
         [HttpPost("Attendence/Mark")]
-        public string AppeardOnLesson(string userId, string lessonsId)
+        public ActionResult AppeardOnLesson(string userId, string lessonsId)
         {
             List<User> users = db.GetUsers();
             DateTime date = DateTime.Now;
@@ -28,7 +28,7 @@ namespace _09122025.Controllers
                             {
                                lesson.Attendence.Attended = true;
                                 lesson.Attendence.AppeardTime = date;
-                                return "Посещение учтено";
+                               
                                 
                             }
                           
@@ -37,15 +37,38 @@ namespace _09122025.Controllers
                    
                 }
             }
-
-            return "Неверный логин или пароль";
+            return Ok();
         }
 
         [HttpPost("Attendence/Upload-document")]
-        public ActionResult Upload(string userId, string attendenceId, string reason, string comment, byte[] document)
+        public ActionResult Upload(string userId, string lessonId, string reason, string comment, byte[] document, string scheduleId)
         {
+            List<User> users = db.GetUsers();
+            foreach (var user in users)
+            {
+                if (user.Id == userId)
+                {
+                    foreach(Schedule schedule in user.Schedule)
+                    {
+                        if(schedule.Id == scheduleId)
+                        {
+                            foreach(Lesson lesson in schedule.Lessons)
+                            {
+                                if(lesson.Id == lessonId)
+                                {
+                                    lesson.Attendence.SkipReason = reason;
+                                    lesson.Attendence.SkipComment = comment;
+                                    lesson.Attendence.SkipDocument = document;
 
-            return Ok();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+
+                    return Ok();
         }
 
     }

@@ -26,7 +26,7 @@ namespace _09122025.Controllers
         }
 
         [HttpGet("Auth/Schedule")]
-        public string Schedule(string login, string password, DateOnly date)
+        public string Schedule(string user_id, DateOnly date)
         {
             List<User> users = db.GetUsers();
 
@@ -34,11 +34,11 @@ namespace _09122025.Controllers
 
             foreach (var user in users)
             {
-                if (user.Password == password && user.Login == login)
+                if (user_id == user.Id)
                 {
                    foreach(Schedule schedule in user.Schedule)
                     {
-                        if(date == schedule.Date)
+                        if(schedule.Date == date)
                         {
                             foreach(Lesson lesson in schedule.Lessons)
                             {
